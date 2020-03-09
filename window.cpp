@@ -27,6 +27,6 @@ void Window::drawBall(int pos_x, int pos_y) {
   wrefresh(this->window);
 }
 
-void Window::reload() {
+void Window::reload(vector<Ball> balls) {
 
 }
