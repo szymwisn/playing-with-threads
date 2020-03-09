@@ -8,12 +8,42 @@
 
 using namespace std;
 
+Window * window;
+
 int main(int argc, char * argv[]) {
-  Window* window = new Window();
+  window = new Window();
 
-  window->drawBall(20, 20);
+  vector<std::thread> ballThreads(20);
+  std::thread windowThread(windowUpdateCallback);
 
-  window->~Window();
+  std::thread exitThread(exitCallback);
+
+  for(int i = 0; i < ballThreads.size; i++) {
+    std::ballThread ballThread(ballCallback, i);
+    ballThreads.push_back(ballThread);
+  } 
+  
+  windowThread.join();
+  exitThread.join();
+  
+  for(int i = 0; i < ballThreads.size; i++) {
+    ballThreads[i].join();
+  }
+
+  //window->drawBall(20, 20);
+  //window->~Window();
   return 0;
+}
+
+void windowUpdateCallback() {
+
+}
+
+void exitCallback() {
+
+}
+
+void ballCallback(int id) {
+
 }
 
