@@ -10,8 +10,14 @@ Ball::Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight) {
   this->winHeight = winHeight;
 }
 
-Ball::~Ball() {
+Ball::~Ball() {}
 
+int Ball::getPosX() {
+  return this->pos_x;
+}
+
+int Ball::getPosY() {
+  return this->pos_y;
 }
 
 void Ball::moveBall() {
@@ -20,32 +26,32 @@ void Ball::moveBall() {
 
     switch(this->direction) {
       case Direction::TOP:
-        pos_y += 1 * this->speed;
+        this->pos_y -= 1;
         break; 
       case Direction::TOP_RIGHT:
-        pos_y += 1 * this->speed;
-        pos_x += 1 * this->speed;
+        this->pos_y -= 1 * this->speed;
+        this->pos_x += 1 * this->speed;
         break;
       case Direction::RIGHT:
-        pos_x += 1 * this->speed;
+        this->pos_x += 1 * this->speed;
         break;
       case Direction::BOTTOM_RIGHT:
-        pos_x += 1 * this->speed;
-        pos_y -= 1 * this->speed;
+        this->pos_x += 1 * this->speed;
+        this->pos_y += 1 * this->speed;
         break;
       case Direction::BOTTOM:
-        pos_y -= 1 * this->speed;
+        this->pos_y += 1 * this->speed;
         break;
       case Direction::BOTTOM_LEFT:
-        pos_x -= 1 * this->speed;
-        pos_y -= 1 * this->speed;
+        this->pos_x -= 1 * this->speed;
+        this->pos_y += 1 * this->speed;
         break;
       case Direction::LEFT:
-        pos_x -= 1 * this->speed;
+        this->pos_x -= 1 * this->speed;
         break;
       case Direction:: TOP_LEFT:
-        pos_x -= 1 * this->speed;
-        pos_y += 1 * this->speed;
+        this->pos_x -= 1 * this->speed;
+        this->pos_y -= 1 * this->speed;
         break;
     } 
   } while(true);
@@ -53,7 +59,7 @@ void Ball::moveBall() {
 
 void Ball::changeDirection() {
   // top wall
-  if (pos_y == 0) {
+  if (this->pos_y == 0) {
     switch(this->direction) {
       case Direction::TOP:
         this->direction = Direction::BOTTOM;
@@ -68,7 +74,7 @@ void Ball::changeDirection() {
   }
 
   // right wall
-  if (pos_x == winWidth) {
+  if (this->pos_x == this->winWidth) {
     switch(this->direction) {
       case Direction::TOP_RIGHT:
         this->direction = Direction::TOP_LEFT;
@@ -83,7 +89,7 @@ void Ball::changeDirection() {
   } 
 
   // bottom wall
-  if (pos_y == winHeight) {
+  if (this->pos_y == this->winHeight) {
     switch(this->direction) {
       case Direction::BOTTOM_RIGHT:
         this->direction = Direction::TOP_RIGHT;
@@ -98,7 +104,7 @@ void Ball::changeDirection() {
   }   
 
   // left wall
-  if (pos_x == 0) {
+  if (this->pos_x == 0) {
     switch(this->direction) {
       case Direction::BOTTOM_LEFT:
         this->direction = Direction::BOTTOM_RIGHT;
@@ -112,4 +118,3 @@ void Ball::changeDirection() {
     }
   }
 }
-

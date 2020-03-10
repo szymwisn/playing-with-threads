@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <ncurses.h>
+#include "ball.h"
+
+using namespace std;
 
 class Window {
   WINDOW* window;
@@ -15,8 +18,9 @@ class Window {
   public:
     Window();
     ~Window();
-    void reload(vector<Ball> balls);
+    void reload(vector<Ball*> balls);
+    int getWidth();
+    int getHeight();
 };
 
 #endif
-

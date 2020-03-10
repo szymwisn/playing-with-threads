@@ -1,6 +1,7 @@
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <thread>
+#include <pthread.h>
 #include <vector>
 
 #include "window.h"
@@ -8,58 +9,73 @@
 
 using namespace std;
 
+const int BALLS_NUMBER = 20;
+
 Window * window;
-vector<Ball*> balls;
+vector<Ball*> allBalls;
 bool running = true;
 
-void windowUpdateCallback() {
+void* windowUpdateCallback(void* arg) {
   do {
-    window.reload(balls);
+    window->reload(allBalls);
   } while(running);
+
+  pthread_exit(NULL);
 }
 
-void exitCallback() {
+void* exitCallback(void* arg) {
   do {
     char key = getchar();
 
-    if(c == 'q') {
+    if(key == 'q') {
       running = false;
     }
   } while(running);
+  
+  pthread_exit(NULL);
 }
 
-void ballCallback(int id) {
+void* ballCallback(void* id) {
   do {
-    balls[i].moveBall();
+    allBalls[(long) id]->moveBall();
   } while(running);
+
+  pthread_exit(NULL);
 }
 
 int main(int argc, char * argv[]) {
   window = new Window();
-
-  int N = 20;
   
-  balls.resize(N);
+  allBalls.reserve(BALLS_NUMBER);
 
-  vector<thread> ballThreads;
-  thread windowThread(windowUpdateCallback);
+  pthread_t ballThreads[allBalls.size()];
+  pthread_t windowThread;   
+  pthread_t exitThread;
 
-  thread exitThread(exitCallback);
+  pthread_create(&windowThread, NULL, &windowUpdateCallback, NULL);
+  pthread_create(&exitThread, NULL, &exitCallback, NULL); 
 
-  for(int i = 0; i < ballThreads.size(); i++) {
-    balls.push_back(new Ball(i, window.getWidth()/2, window.getHeight(), window.getWidth(), window.getHeight()));
-    thread ballThread(ballCallback, i);
-    ballThreads.push_back(ballThread);
+  for(long i = 0; i < allBalls.size(); i++) {
+    allBalls.push_back(new Ball(i, window->getWidth()/2, window->getHeight() - 1, window->getWidth(), window->getHeight()));
+    int t = pthread_create(&ballThreads[i], NULL, ballCallback, (void *) i );    
+
+    if(t != 0) {
+      cout << "Error in thread creation: " << t << endl;
+    }
   } 
-  
-  windowThread.join();
-  exitThread.join();
-  
-  for(int i = 0; i < ballThreads.size(); i++) {
-    ballThreads[i].join();
+
+  pthread_join(windowThread, NULL);
+  pthread_join(exitThread, NULL);
+    
+  for (int i = 0; i < allBalls.size(); i++) {
+    int t = pthread_join(ballThreads[i], NULL);
+
+    if (t) {
+        cout << "Error in thread joining: " << t << endl;
+    }
   }
 
-  //window->~Window();
+  delete window;
+
   return 0;
 }
-

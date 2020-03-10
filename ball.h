@@ -9,9 +9,9 @@ class Ball {
   int pos_x;
   int pos_y;
   int speed;
-  Direction direction;
-  int winHeight;
   int winWidth;
+  int winHeight;
+  Direction direction;
 
   public:
     Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight); 
@@ -19,7 +19,8 @@ class Ball {
 
     void moveBall();   
     void changeDirection();
+    int getPosX();
+    int getPosY();
 };
 
 #endif
-

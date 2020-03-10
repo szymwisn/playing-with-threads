@@ -8,4 +8,3 @@ enum Direction {
   LEFT,
   TOP_LEFT
 };
-
