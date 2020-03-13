@@ -13,7 +13,7 @@ class Window {
   int height;
 
   void drawArea();
-  void drawBall(int pos_x, int pos_y);
+  void drawBall(Ball* ball);
   
   public:
     Window();
