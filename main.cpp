@@ -10,39 +10,38 @@
 
 using namespace std;
 
-const int BALLS_NUMBER = 1;
+const int BALLS_NUMBER = 10;
 
 Window * window;
 vector<Ball*> allBalls;
 bool running = true;
 
 void* windowUpdateCallback(void* arg) {
-  do {
-    usleep(5000);
+  while(running) {
+    usleep(10000);
     window->reload(allBalls);
-  } while(running);
+  }
 
   pthread_exit(NULL);
 }
 
 void* exitCallback(void* arg) {
-  do {
+  while(running) {
     char key = getchar();
 
     if(key == 'q') {
       running = false;
-      exit(0);
     }
-  } while(running);
+  }
   
   pthread_exit(NULL);
 }
 
 void* ballCallback(void* id) {
-  do {
-    usleep(50000);
+  while(running) {
+    usleep(allBalls[(long) id]->getSpeed());
     allBalls[(long) id]->moveBall();
-  } while(running);
+  }
 
   pthread_exit(NULL);
 }
@@ -63,8 +62,10 @@ int main(int argc, char * argv[]) {
     int t = pthread_create(&ballThreads[i], NULL, ballCallback, (void *) i );    
 
     if(t != 0) {
-      cout << "Error in thread creation: " << t << endl;
+      exit(-1);
     }
+
+    sleep(1);
   } 
 
   pthread_join(windowThread, NULL);
@@ -74,7 +75,7 @@ int main(int argc, char * argv[]) {
     int t = pthread_join(ballThreads[i], NULL);
 
     if (t) {
-        cout << "Error in thread joining: " << t << endl;
+      exit(-1);
     }
   }
 

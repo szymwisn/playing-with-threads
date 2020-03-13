@@ -29,6 +29,7 @@ class Ball {
     int getPrevPosX();
     int getPrevPosY();
     int getColor();
+    int getSpeed();
 };
 
 #endif

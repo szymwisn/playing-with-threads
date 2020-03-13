@@ -4,8 +4,7 @@ Ball::Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight) {
   this->id = id;
   this->pos_x = pos_x;
   this->pos_y = pos_y;
-  // this->speed = rand() % 4 + 1;
-  this->speed = 1;
+  this->speed = rand() % 50000 + 10000;
   this->direction = Direction::TOP;
   this->winWidth = winWidth;
   this->winHeight = winHeight;
@@ -37,48 +36,52 @@ int Ball::getColor() {
   return this->color;
 }
 
+int Ball::getSpeed() {
+  return this->speed;
+}
+
 void Ball::moveBall() {
-  do { 
-    if(!this->directionChanged && this->getPosY() == this->winHeight / 2) {
-      this->randomizeDirection();
-    }
+  this->prev_pos_x = pos_x;
+  this->prev_pos_y = pos_y;
 
-    switch(this->direction) {
-      case Direction::TOP:
-        this->pos_y -= 1;
-        break; 
-      case Direction::TOP_RIGHT:
-        this->pos_y -= 1;
-        this->pos_x += 1;
-        break;
-      case Direction::RIGHT:
-        this->pos_x += 1;
-        break;
-      case Direction::BOTTOM_RIGHT:
-        this->pos_x += 1;
-        this->pos_y += 1;
-        break;
-      case Direction::BOTTOM:
-        this->pos_y += 1;
-        break;
-      case Direction::BOTTOM_LEFT:
-        this->pos_x -= 1;
-        this->pos_y += 1;
-        break;
-      case Direction::LEFT:
-        this->pos_x -= 1;
-        break;
-      case Direction:: TOP_LEFT:
-        this->pos_x -= 1;
-        this->pos_y -= 1;
-        break;
-    } 
+  int heightToChangeDirection = this->winHeight - rand() % this->winHeight / 2;
 
-    this->prev_pos_x = pos_x;
-    this->prev_pos_y = pos_y;
+  if(!this->directionChanged && this->getPosY() == heightToChangeDirection) {
+    this->randomizeDirection();
+  }
 
-    this->bounce();
-  } while(true);
+  switch(this->direction) {
+    case Direction::TOP:
+      this->pos_y--;
+      break; 
+    case Direction::TOP_RIGHT:
+      this->pos_y--;
+      this->pos_x++;
+      break;
+    case Direction::RIGHT:
+      this->pos_x++;
+      break;
+    case Direction::BOTTOM_RIGHT:
+      this->pos_x++;
+      this->pos_y++;
+      break;
+    case Direction::BOTTOM:
+      this->pos_y++;
+      break;
+    case Direction::BOTTOM_LEFT:
+      this->pos_x--;
+      this->pos_y++;
+      break;
+    case Direction::LEFT:
+      this->pos_x--;
+      break;
+    case Direction:: TOP_LEFT:
+      this->pos_x--;
+      this->pos_y--;
+      break;
+  } 
+
+  this->bounce();
 }
 
 void Ball::bounce() {

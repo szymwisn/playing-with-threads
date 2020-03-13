@@ -44,10 +44,10 @@ void Window::drawArea() {
 }
 
 void Window::drawBall(Ball* ball) {
-  mvwprintw(this->window, ball->getPrevPosY(), ball->getPrevPosX(), " ");
+  mvwaddch(this->window, ball->getPrevPosY(), ball->getPrevPosX(), ' ');
   
   wattron(this->window, COLOR_PAIR(ball->getColor()));
-  mvwprintw(this->window, ball->getPosY(), ball->getPosX(), "o");
+  mvwaddch(this->window, ball->getPosY(), ball->getPosX(), 'o');
   wattroff(this->window, COLOR_PAIR(ball->getColor()));
 
   wrefresh(this->window);
