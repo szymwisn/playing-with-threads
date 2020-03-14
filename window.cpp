@@ -40,11 +40,16 @@ void Window::drawArea() {
   refresh();
 
   box(this->window, 0, 0);
+  mvwaddch(this->window, this->height / 2, this->width / 2, 'V');
   wrefresh(this->window);
 }
 
 void Window::drawBall(Ball* ball) {
   mvwaddch(this->window, ball->getPrevPosY(), ball->getPrevPosX(), ' ');
+
+  if(ball->getPrevPosY() == this->height / 2 && ball->getPrevPosX() == this->width / 2) {
+    mvwaddch(this->window, this->height / 2, this->width / 2, 'V');
+  }
   
   wattron(this->window, COLOR_PAIR(ball->getColor()));
   mvwaddch(this->window, ball->getPosY(), ball->getPosX(), 'o');

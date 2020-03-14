@@ -44,9 +44,7 @@ void Ball::moveBall() {
   this->prev_pos_x = pos_x;
   this->prev_pos_y = pos_y;
 
-  int heightToChangeDirection = this->winHeight / 2;
-
-  if(!this->directionChanged && this->getPosY() == heightToChangeDirection) {
+  if(!this->directionChanged && this->getPosY() == this->winHeight / 2) {
     this->randomizeDirection();
   }
 
