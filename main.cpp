@@ -4,13 +4,14 @@
 #include <pthread.h>
 #include <vector>
 #include <unistd.h>
+#include <time.h>
 
 #include "window.h"
 #include "ball.h"
 
 using namespace std;
 
-const int BALLS_NUMBER = 10;
+const int BALLS_NUMBER = 50;
 
 Window * window;
 vector<Ball*> allBalls;

@@ -4,7 +4,7 @@ Ball::Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight) {
   this->id = id;
   this->pos_x = pos_x;
   this->pos_y = pos_y;
-  this->speed = rand() % 50000 + 10000;
+  this->speed = rand() % 50000 + 20000;
   this->direction = Direction::TOP;
   this->winWidth = winWidth;
   this->winHeight = winHeight;
@@ -44,7 +44,7 @@ void Ball::moveBall() {
   this->prev_pos_x = pos_x;
   this->prev_pos_y = pos_y;
 
-  int heightToChangeDirection = this->winHeight - rand() % this->winHeight / 2;
+  int heightToChangeDirection = this->winHeight / 2;
 
   if(!this->directionChanged && this->getPosY() == heightToChangeDirection) {
     this->randomizeDirection();
@@ -150,11 +150,11 @@ void Ball::randomizeDirection() {
   // probability of moving left - 45%
   // right - 40%
   // no change - 15%
-  bool number = rand() % 100 + 1;
+  int number = rand() % 100 + 1;
 
-  if (number >= 1 && number <= 45) {
+  if (number > 0 && number <= 45) {
     this->direction = Direction::TOP_LEFT;
-  } else if (number >= 60 && number <= 100) {
+  } else if (number > 60 && number <= 100) {
     this->direction = Direction::TOP_RIGHT;
   }
 
