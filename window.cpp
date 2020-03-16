@@ -2,9 +2,10 @@
 
 Window::Window() {
   initscr();
-  // cbreak();
   noecho();
   keypad(stdscr, TRUE);
+  cbreak();
+  nodelay(this->window, false);
   curs_set(FALSE);
   getmaxyx(stdscr, this->height, this->width);
   start_color();

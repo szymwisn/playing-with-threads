@@ -20,6 +20,7 @@ Basket* basket;
 
 vector<Ball*> allBalls;
 bool running = true;
+int pressedKey;
 
 void* windowUpdateCallback(void* arg) {
   while(running) {
@@ -27,18 +28,6 @@ void* windowUpdateCallback(void* arg) {
     window->reload(allBalls, basket);
   }
 
-  pthread_exit(NULL);
-}
-
-void* exitCallback(void* arg) {
-  while(running) {
-    int key = wgetch(window->getWindow());
-
-    if(key == KEY_EXIT) {
-      running = false;
-    }
-  }
-  
   pthread_exit(NULL);
 }
 
@@ -51,11 +40,14 @@ void* ballCallback(void* id) {
   pthread_exit(NULL);
 }
 
-void* basketCallback(void* arg) {
+void* keyboardCallback(void* arg) {
   while(running) {
     int key = getch();
 
     switch (key) {
+      case 'q':
+        running = false;
+        break;
       case KEY_UP:
         basket->moveTop(); 
         break;
@@ -86,12 +78,10 @@ int main(int argc, char * argv[]) {
   
   pthread_t ballThreads[BALLS_NUMBER];
   pthread_t windowThread;   
-  pthread_t exitThread;
-  pthread_t basketThread;
+  pthread_t keyboardThread;
 
   pthread_create(&windowThread, NULL, &windowUpdateCallback, NULL);
-  pthread_create(&exitThread, NULL, &exitCallback, NULL); 
-  pthread_create(&basketThread, NULL, &basketCallback, NULL);
+  pthread_create(&keyboardThread, NULL, &keyboardCallback, NULL); 
 
   for(long i = 0; i < BALLS_NUMBER; i++) {
     int t = pthread_create(&ballThreads[i], NULL, ballCallback, (void *) i );    
@@ -104,8 +94,7 @@ int main(int argc, char * argv[]) {
   } 
 
   pthread_join(windowThread, NULL);
-  pthread_join(exitThread, NULL);
-  pthread_join(basketThread, NULL);
+  pthread_join(keyboardThread, NULL);
     
   for (int i = 0; i < allBalls.size(); i++) {
     int t = pthread_join(ballThreads[i], NULL);
