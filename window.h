@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <ncurses.h>
+
 #include "ball.h"
+#include "basket.h"
 
 using namespace std;
 
@@ -14,13 +16,15 @@ class Window {
 
   void drawArea();
   void drawBall(Ball* ball);
+  void drawBasket(Basket* basket);
   
   public:
     Window();
     ~Window();
-    void reload(vector<Ball*> balls);
+    void reload(vector<Ball*> balls, Basket* basket);
     int getWidth();
     int getHeight();
+    WINDOW* getWindow();
 };
 
 #endif

@@ -12,6 +12,7 @@ Ball::Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight) {
   this->prev_pos_y = pos_y;
   this->directionChanged = false;
   this->color = rand() % 6 + 1;
+  this->inBasket = false;
 }
 
 Ball::~Ball() {}
@@ -41,45 +42,47 @@ int Ball::getSpeed() {
 }
 
 void Ball::moveBall() {
-  this->prev_pos_x = pos_x;
-  this->prev_pos_y = pos_y;
+  if(!this->inBasket) {
+    this->prev_pos_x = pos_x;
+    this->prev_pos_y = pos_y;
 
-  if(!this->directionChanged && this->getPosY() == this->winHeight / 2) {
-    this->randomizeDirection();
+    if(!this->directionChanged && this->getPosY() == this->winHeight / 2) {
+      this->randomizeDirection();
+    }
+
+    switch(this->direction) {
+      case Direction::TOP:
+        this->pos_y--;
+        break; 
+      case Direction::TOP_RIGHT:
+        this->pos_y--;
+        this->pos_x++;
+        break;
+      case Direction::RIGHT:
+        this->pos_x++;
+        break;
+      case Direction::BOTTOM_RIGHT:
+        this->pos_x++;
+        this->pos_y++;
+        break;
+      case Direction::BOTTOM:
+        this->pos_y++;
+        break;
+      case Direction::BOTTOM_LEFT:
+        this->pos_x--;
+        this->pos_y++;
+        break;
+      case Direction::LEFT:
+        this->pos_x--;
+        break;
+      case Direction:: TOP_LEFT:
+        this->pos_x--;
+        this->pos_y--;
+        break;
+    } 
+
+    this->bounce();
   }
-
-  switch(this->direction) {
-    case Direction::TOP:
-      this->pos_y--;
-      break; 
-    case Direction::TOP_RIGHT:
-      this->pos_y--;
-      this->pos_x++;
-      break;
-    case Direction::RIGHT:
-      this->pos_x++;
-      break;
-    case Direction::BOTTOM_RIGHT:
-      this->pos_x++;
-      this->pos_y++;
-      break;
-    case Direction::BOTTOM:
-      this->pos_y++;
-      break;
-    case Direction::BOTTOM_LEFT:
-      this->pos_x--;
-      this->pos_y++;
-      break;
-    case Direction::LEFT:
-      this->pos_x--;
-      break;
-    case Direction:: TOP_LEFT:
-      this->pos_x--;
-      this->pos_y--;
-      break;
-  } 
-
-  this->bounce();
 }
 
 void Ball::bounce() {
@@ -157,4 +160,37 @@ void Ball::randomizeDirection() {
   }
 
   directionChanged = true;
+}
+
+void Ball::catchInBasket() {
+  if(!this->inBasket) {
+    this->inBasket = true;
+  }
+}
+
+void Ball::removeFromBasket() {
+  if(this->inBasket) {
+    vector<Direction> directions;
+    directions.push_back(Direction::TOP);
+    directions.push_back(Direction::TOP_RIGHT);
+    directions.push_back(Direction::RIGHT);
+    directions.push_back(Direction::BOTTOM_RIGHT);
+    directions.push_back(Direction::BOTTOM);
+    directions.push_back(Direction::BOTTOM_LEFT);
+    directions.push_back(Direction::LEFT);
+    directions.push_back(Direction::TOP_LEFT);
+
+    int index = rand() % directions.size();
+    Direction newDirection = directions[index];
+
+    this->direction = newDirection;
+    this->inBasket = false;
+  }
+}
+
+void Ball::moveInBasket(int horizontal_change, int vertical_change) {
+  if(this->inBasket) {
+    this->pos_x += horizontal_change;
+    this->pos_y += vertical_change;
+  }
 }

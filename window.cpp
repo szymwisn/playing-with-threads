@@ -2,6 +2,9 @@
 
 Window::Window() {
   initscr();
+  // cbreak();
+  noecho();
+  keypad(stdscr, TRUE);
   curs_set(FALSE);
   getmaxyx(stdscr, this->height, this->width);
   start_color();
@@ -18,10 +21,11 @@ Window::~Window() {
   wrefresh(this->window);
   delwin(this->window);
   endwin();
-  refresh();
 }
 
-void Window::reload(vector<Ball*> balls) {
+void Window::reload(vector<Ball*> balls, Basket* basket) {
+  drawBasket(basket);
+
   for(int i = 0; i < balls.size(); i++){
     drawBall(balls[i]);
   }
@@ -33,6 +37,10 @@ int Window::getWidth() {
 
 int Window::getHeight() {
   return this->height;
+}
+
+WINDOW* Window::getWindow() {
+  return this->window;
 }
 
 void Window::drawArea() {
@@ -54,6 +62,34 @@ void Window::drawBall(Ball* ball) {
   wattron(this->window, COLOR_PAIR(ball->getColor()));
   mvwaddch(this->window, ball->getPosY(), ball->getPosX(), 'o');
   wattroff(this->window, COLOR_PAIR(ball->getColor()));
+
+  wrefresh(this->window);
+}
+
+void Window::drawBasket(Basket* basket) {
+  for(Point* point : basket->getPrevLeftEdge()) {
+    mvwaddch(this->window, point->y, point->x, ' ');
+  }
+
+  for(Point* point : basket->getPrevRightEdge()) {
+    mvwaddch(this->window, point->y, point->x, ' ');
+  }
+
+  for(Point* point : basket->getPrevBottomEdge()) {
+    mvwaddch(this->window, point->y, point->x, ' ');
+  }
+  
+  for(Point* point : basket->getLeftEdge()) {
+    mvwaddch(this->window, point->y, point->x, '|');
+  }
+
+  for(Point* point : basket->getRightEdge()) {
+    mvwaddch(this->window, point->y, point->x, '|');
+  }
+
+  for(Point* point : basket->getBottomEdge()) {
+    mvwaddch(this->window, point->y, point->x, '_');
+  }
 
   wrefresh(this->window);
 }
