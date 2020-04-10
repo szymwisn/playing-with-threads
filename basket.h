@@ -23,7 +23,7 @@ class Basket {
 
     void prepareBasket(int width, int height);
     void definePreviousEdges();
-    vector<Point*> deepCopyEdge(vector<Point*>);
+    vector<Point*> deepCopyEdge(vector<Point*> edge);
     
     public:
         Basket(int winWidth, int winHeight); 

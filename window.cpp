@@ -1,6 +1,7 @@
 #include "window.h"
 
-Window::Window() {
+Window::Window()
+{
   initscr();
   noecho();
   keypad(stdscr, TRUE);
@@ -18,33 +19,40 @@ Window::Window() {
   this->drawArea();
 }
 
-Window::~Window() {
+Window::~Window()
+{
   wrefresh(this->window);
   delwin(this->window);
   endwin();
 }
 
-void Window::reload(vector<Ball*> balls, Basket* basket) {
+void Window::reload(vector<Ball *> balls, Basket *basket)
+{
   drawBasket(basket);
 
-  for(int i = 0; i < balls.size(); i++){
+  for (int i = 0; i < balls.size(); i++)
+  {
     drawBall(balls[i]);
   }
 }
 
-int Window::getWidth() {
+int Window::getWidth()
+{
   return this->width;
 }
 
-int Window::getHeight() {
+int Window::getHeight()
+{
   return this->height;
 }
 
-WINDOW* Window::getWindow() {
+WINDOW *Window::getWindow()
+{
   return this->window;
 }
 
-void Window::drawArea() {
+void Window::drawArea()
+{
   this->window = newwin(this->height, this->width, 0, 0);
   refresh();
 
@@ -53,13 +61,15 @@ void Window::drawArea() {
   wrefresh(this->window);
 }
 
-void Window::drawBall(Ball* ball) {
+void Window::drawBall(Ball *ball)
+{
   mvwaddch(this->window, ball->getPrevPosY(), ball->getPrevPosX(), ' ');
 
-  if(ball->getPrevPosY() == this->height / 2 && ball->getPrevPosX() == this->width / 2) {
+  if (ball->getPrevPosY() == this->height / 2 && ball->getPrevPosX() == this->width / 2)
+  {
     mvwaddch(this->window, this->height / 2, this->width / 2, 'V');
   }
-  
+
   wattron(this->window, COLOR_PAIR(ball->getColor()));
   mvwaddch(this->window, ball->getPosY(), ball->getPosX(), 'o');
   wattroff(this->window, COLOR_PAIR(ball->getColor()));
@@ -67,28 +77,37 @@ void Window::drawBall(Ball* ball) {
   wrefresh(this->window);
 }
 
-void Window::drawBasket(Basket* basket) {
-  for(Point* point : basket->getPrevLeftEdge()) {
+void Window::drawBasket(Basket *basket)
+{
+  for (Point *point : basket->getPrevLeftEdge())
+  {
     mvwaddch(this->window, point->y, point->x, ' ');
   }
 
-  for(Point* point : basket->getPrevRightEdge()) {
+  for (Point *point : basket->getPrevRightEdge())
+  {
     mvwaddch(this->window, point->y, point->x, ' ');
   }
 
-  for(Point* point : basket->getPrevBottomEdge()) {
+  for (Point *point : basket->getPrevBottomEdge())
+  {
     mvwaddch(this->window, point->y, point->x, ' ');
   }
-  
-  for(Point* point : basket->getLeftEdge()) {
+
+  wrefresh(this->window);
+
+  for (Point *point : basket->getLeftEdge())
+  {
     mvwaddch(this->window, point->y, point->x, '|');
   }
 
-  for(Point* point : basket->getRightEdge()) {
+  for (Point *point : basket->getRightEdge())
+  {
     mvwaddch(this->window, point->y, point->x, '|');
   }
 
-  for(Point* point : basket->getBottomEdge()) {
+  for (Point *point : basket->getBottomEdge())
+  {
     mvwaddch(this->window, point->y, point->x, '_');
   }
 
