@@ -97,6 +97,42 @@ void Ball::moveBall()
   }
 }
 
+void Ball::moveBottom()
+{
+  if (this->inBasket)
+  {
+    this->prev_pos_y = pos_y;
+    this->pos_y++;
+  }
+}
+
+void Ball::moveTop()
+{
+  if (this->inBasket)
+  {
+    this->prev_pos_y = pos_y;
+    this->pos_y--;
+  }
+}
+
+void Ball::moveRight()
+{
+  if (this->inBasket)
+  {
+    this->prev_pos_x = pos_x;
+    this->pos_x++;
+  }
+}
+
+void Ball::moveLeft()
+{
+  if (this->inBasket)
+  {
+    this->prev_pos_x = pos_x;
+    this->pos_x--;
+  }
+}
+
 void Ball::bounce()
 {
   // top wall

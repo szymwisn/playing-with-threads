@@ -58,6 +58,11 @@ void Basket::moveTop()
         {
             point->y--;
         }
+
+        for (Ball *ball : this->coughtBalls)
+        {
+            ball->moveTop();
+        }
     }
 }
 
@@ -80,6 +85,11 @@ void Basket::moveRight()
         for (Point *point : this->bottomEdge)
         {
             point->x++;
+        }
+
+        for (Ball *ball : this->coughtBalls)
+        {
+            ball->moveRight();
         }
     }
 }
@@ -104,6 +114,11 @@ void Basket::moveBottom()
         {
             point->y++;
         }
+
+        for (Ball *ball : this->coughtBalls)
+        {
+            ball->moveBottom();
+        }
     }
 }
 
@@ -126,6 +141,11 @@ void Basket::moveLeft()
         for (Point *point : this->bottomEdge)
         {
             point->x--;
+        }
+
+        for (Ball *ball : this->coughtBalls)
+        {
+            ball->moveLeft();
         }
     }
 }

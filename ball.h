@@ -40,6 +40,10 @@ public:
   ~Ball();
 
   void moveBall();
+  void moveLeft();
+  void moveTop();
+  void moveRight();
+  void moveBottom();
   void tryCatching();
   void catchToBasket();
   void releaseFromBasket();
