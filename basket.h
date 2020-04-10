@@ -4,10 +4,12 @@
 #include <vector>
 #include <stdlib.h>
 
-#include "ball.h"
 #include "point.h"
+#include "ball.h"
 
 using namespace std;
+
+class Ball;
 
 class Basket
 {
@@ -19,7 +21,6 @@ class Basket
     vector<Point *> prevLeftEdge;
     vector<Point *> prevRightEdge;
     vector<Point *> prevBottomEdge;
-    vector<Ball *> allBalls;
     vector<Ball *> coughtBalls;
 
     void prepareBasket(int width, int height);
@@ -30,7 +31,7 @@ public:
     Basket(int winWidth, int winHeight);
     ~Basket();
 
-    void catchBalls(vector<Ball *> allBalls); // przekazac wszystkie ballsy, porownac wspolrzedne, sprawdzic czy ball wpadl do kubla, jesli tak - dodac ballsy do coughtBalls, wywolac ball->moveInBasket w moveTop, moveRight itp.
+    void catchBall(Ball *ball);
     void moveTop();
     void moveRight();
     void moveBottom();

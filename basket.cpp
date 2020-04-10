@@ -130,9 +130,20 @@ void Basket::moveLeft()
     }
 }
 
-void Basket::catchBalls(vector<Ball *> allBalls)
+void Basket::catchBall(Ball *ball)
 {
-    // TODO
+    ball->catchToBasket();
+    this->coughtBalls.push_back(ball);
+
+    if (coughtBalls.size() == 5)
+    {
+        for (Ball *coughtBall : this->coughtBalls)
+        {
+            coughtBall->releaseFromBasket();
+        }
+
+        this->coughtBalls.clear();
+    }
 }
 
 void Basket::prepareBasket(int width, int height)

@@ -32,3 +32,5 @@ app
 *.exe
 *.out
 *.app
+
+.vscode/launch.json

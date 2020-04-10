@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const int BALLS_NUMBER = 3;
+const int BALLS_NUMBER = 50;
 
 Window *window;
 Basket *basket;
@@ -26,7 +26,8 @@ void *windowUpdateCallback(void *arg)
 {
   while (running)
   {
-    usleep(10000);
+    // 25 Hz
+    usleep(40000);
     window->reload(allBalls, basket);
   }
 
@@ -38,6 +39,7 @@ void *ballCallback(void *id)
   while (running)
   {
     usleep(allBalls[(long)id]->getSpeed());
+    allBalls[(long)id]->tryCatching();
     allBalls[(long)id]->moveBall();
   }
 
@@ -82,7 +84,7 @@ int main(int argc, char *argv[])
 
   for (long i = 0; i < BALLS_NUMBER; i++)
   {
-    allBalls.push_back(new Ball(i, window->getWidth() / 2, window->getHeight() - 2, window->getWidth(), window->getHeight()));
+    allBalls.push_back(new Ball(i, window->getWidth() / 2, window->getHeight() - 2, window->getWidth(), window->getHeight(), basket));
   }
 
   pthread_t ballThreads[BALLS_NUMBER];

@@ -5,8 +5,12 @@
 #include <vector>
 
 #include "direction.cpp"
+#include "point.h"
+#include "basket.h"
 
 using namespace std;
+
+class Basket;
 
 class Ball
 {
@@ -21,19 +25,24 @@ class Ball
   Direction direction;
   bool directionChanged;
   int color;
+  Basket *basket;
   bool inBasket;
 
   void bounce();
+  void bounceBasketLeft();
+  void bounceBasketBottom();
+  void bounceBasketRight();
   void randomizeDirection();
+  int randomizeSpeed();
 
 public:
-  Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight);
+  Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight, Basket *basket);
   ~Ball();
 
   void moveBall();
-  void catchInBasket();
-  void removeFromBasket();
-  void moveInBasket(int horizontal_change, int vertical_change);
+  void tryCatching();
+  void catchToBasket();
+  void releaseFromBasket();
 
   int getPosX();
   int getPosY();

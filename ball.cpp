@@ -1,11 +1,11 @@
 #include "ball.h"
 
-Ball::Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight)
+Ball::Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight, Basket *basket)
 {
   this->id = id;
   this->pos_x = pos_x;
   this->pos_y = pos_y;
-  this->speed = rand() % 50000 + 20000;
+  this->speed = this->randomizeSpeed();
   this->direction = Direction::TOP;
   this->winWidth = winWidth;
   this->winHeight = winHeight;
@@ -14,6 +14,7 @@ Ball::Ball(int id, int pos_x, int pos_y, int winWidth, int winHeight)
   this->directionChanged = false;
   this->color = rand() % 6 + 1;
   this->inBasket = false;
+  this->basket = basket;
 }
 
 Ball::~Ball() {}
@@ -167,6 +168,54 @@ void Ball::bounce()
   }
 }
 
+void Ball::bounceBasketBottom()
+{
+  switch (this->direction)
+  {
+  case Direction::TOP:
+    this->direction = Direction::BOTTOM;
+    break;
+  case Direction::TOP_RIGHT:
+    this->direction = Direction::BOTTOM_RIGHT;
+    break;
+  case Direction::TOP_LEFT:
+    this->direction = Direction::BOTTOM_LEFT;
+    break;
+  }
+}
+
+void Ball::bounceBasketLeft()
+{
+  switch (this->direction)
+  {
+  case Direction::TOP_RIGHT:
+    this->direction = Direction::TOP_LEFT;
+    break;
+  case Direction::RIGHT:
+    this->direction = Direction::LEFT;
+    break;
+  case Direction::BOTTOM_RIGHT:
+    this->direction = Direction::BOTTOM_LEFT;
+    break;
+  }
+}
+
+void Ball::bounceBasketRight()
+{
+  switch (this->direction)
+  {
+  case Direction::BOTTOM_LEFT:
+    this->direction = Direction::BOTTOM_RIGHT;
+    break;
+  case Direction::LEFT:
+    this->direction = Direction::RIGHT;
+    break;
+  case Direction::TOP_LEFT:
+    this->direction = Direction::TOP_RIGHT;
+    break;
+  }
+}
+
 void Ball::randomizeDirection()
 {
   // probability of moving left - 45%
@@ -186,7 +235,25 @@ void Ball::randomizeDirection()
   directionChanged = true;
 }
 
-void Ball::catchInBasket()
+int Ball::randomizeSpeed()
+{
+  switch (rand() % 3)
+  {
+  case 0:
+    return 80000;
+    break;
+  case 1:
+    return 120000;
+    break;
+  case 2:
+    return 160000;
+    break;
+  default:
+    return 80000;
+  }
+}
+
+void Ball::catchToBasket()
 {
   if (!this->inBasket)
   {
@@ -194,18 +261,14 @@ void Ball::catchInBasket()
   }
 }
 
-void Ball::removeFromBasket()
+void Ball::releaseFromBasket()
 {
   if (this->inBasket)
   {
     vector<Direction> directions;
-    directions.push_back(Direction::TOP);
     directions.push_back(Direction::TOP_RIGHT);
-    directions.push_back(Direction::RIGHT);
     directions.push_back(Direction::BOTTOM_RIGHT);
-    directions.push_back(Direction::BOTTOM);
     directions.push_back(Direction::BOTTOM_LEFT);
-    directions.push_back(Direction::LEFT);
     directions.push_back(Direction::TOP_LEFT);
 
     int index = rand() % directions.size();
@@ -216,11 +279,85 @@ void Ball::removeFromBasket()
   }
 }
 
-void Ball::moveInBasket(int horizontal_change, int vertical_change)
+void Ball::tryCatching()
 {
-  if (this->inBasket)
+  if (!this->inBasket)
   {
-    this->pos_x += horizontal_change;
-    this->pos_y += vertical_change;
+    vector<Point *> basketLeft = this->basket->getLeftEdge();
+    vector<Point *> basketRight = this->basket->getRightEdge();
+    vector<Point *> basketBottom = this->basket->getBottomEdge();
+
+    // catch bottom edge
+    if (this->direction == Direction::BOTTOM_LEFT || this->direction == Direction::BOTTOM || this->direction == Direction::BOTTOM_RIGHT)
+    {
+      int edge_x_left = basketLeft[0]->x;
+      int edge_y = basketBottom[0]->y;
+      int edge_x_right = basketRight[0]->x;
+
+      if (this->pos_y == edge_y && this->pos_x >= edge_x_left && this->pos_x <= edge_x_right)
+      {
+        basket->catchBall(this);
+      }
+    }
+    // bounce from bottom edge
+    if (this->direction == Direction::TOP_LEFT || this->direction == Direction::TOP || this->direction == Direction::TOP_RIGHT)
+    {
+      int edge_x_left = basketLeft[0]->x;
+      int edge_y = basketBottom[0]->y;
+      int edge_x_right = basketRight[0]->x;
+
+      if (this->pos_y == edge_y + 1 && this->pos_x >= edge_x_left && this->pos_x <= edge_x_right)
+      {
+        this->bounceBasketBottom();
+      }
+    }
+    // catch left edge
+    if (this->direction == Direction::BOTTOM_LEFT)
+    {
+      int edge_y_top = basketLeft[0]->y;
+      int edge_y_bottom = basketBottom[0]->y;
+      int edge_x = basketLeft[0]->x;
+
+      if (this->pos_x == edge_x + 1 && this->pos_y <= edge_y_bottom && this->pos_y >= edge_y_top)
+      {
+        this->basket->catchBall(this);
+      }
+    }
+    // bounce from left edge
+    if (this->direction == Direction::TOP_RIGHT || this->direction == Direction::RIGHT || this->direction == Direction::BOTTOM_RIGHT)
+    {
+      int edge_y_top = basketLeft[0]->y;
+      int edge_y_bottom = basketBottom[0]->y;
+      int edge_x = basketLeft[0]->x;
+
+      if (this->pos_x == edge_x - 1 && this->pos_y <= edge_y_bottom + 1 && this->pos_y >= edge_y_top - 1)
+      {
+        this->bounceBasketLeft();
+      }
+    }
+    // catch right edge
+    if (this->direction == Direction::BOTTOM_RIGHT)
+    {
+      int edge_y_top = basketRight[0]->y;
+      int edge_y_bottom = basketBottom[0]->y;
+      int edge_x = basketRight[0]->x;
+
+      if (this->pos_x == edge_x - 1 && this->pos_y <= edge_y_bottom && this->pos_y >= edge_y_top)
+      {
+        this->basket->catchBall(this);
+      }
+    }
+    // bounce from right edge
+    if (this->direction == Direction::TOP_LEFT || this->direction == Direction::LEFT || this->direction == Direction::BOTTOM_LEFT)
+    {
+      int edge_y_top = basketRight[0]->y;
+      int edge_y_bottom = basketBottom[0]->y;
+      int edge_x = basketRight[0]->x;
+
+      if (this->pos_x == edge_x + 1 && this->pos_y <= edge_y_bottom + 1 && this->pos_y >= edge_y_top - 1)
+      {
+        this->bounceBasketRight();
+      }
+    }
   }
 }
