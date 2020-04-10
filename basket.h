@@ -9,38 +9,39 @@
 
 using namespace std;
 
-class Basket {
+class Basket
+{
     int winWidth;
     int winHeight;
-    vector<Point*> leftEdge;
-    vector<Point*> rightEdge;
-    vector<Point*> bottomEdge;
-    vector<Point*> prevLeftEdge;
-    vector<Point*> prevRightEdge;
-    vector<Point*> prevBottomEdge;
-    vector<Ball*> allBalls;
-    vector<Ball*> coughtBalls;
+    vector<Point *> leftEdge;
+    vector<Point *> rightEdge;
+    vector<Point *> bottomEdge;
+    vector<Point *> prevLeftEdge;
+    vector<Point *> prevRightEdge;
+    vector<Point *> prevBottomEdge;
+    vector<Ball *> allBalls;
+    vector<Ball *> coughtBalls;
 
     void prepareBasket(int width, int height);
     void definePreviousEdges();
-    vector<Point*> deepCopyEdge(vector<Point*> edge);
-    
-    public:
-        Basket(int winWidth, int winHeight); 
-        ~Basket();
+    vector<Point *> deepCopyEdge(vector<Point *> edge);
 
-        void catchBalls(vector<Ball*> allBalls); // przekazac wszystkie ballsy, porownac wspolrzedne, sprawdzic czy ball wpadl do kubla, jesli tak - dodac ballsy do coughtBalls, wywolac ball->moveInBasket w moveTop, moveRight itp.
-        void moveTop(); 
-        void moveRight(); 
-        void moveBottom(); 
-        void moveLeft(); 
+public:
+    Basket(int winWidth, int winHeight);
+    ~Basket();
 
-        vector<Point*> getLeftEdge();
-        vector<Point*> getRightEdge();
-        vector<Point*> getBottomEdge();
-        vector<Point*> getPrevLeftEdge();
-        vector<Point*> getPrevRightEdge();
-        vector<Point*> getPrevBottomEdge();
+    void catchBalls(vector<Ball *> allBalls); // przekazac wszystkie ballsy, porownac wspolrzedne, sprawdzic czy ball wpadl do kubla, jesli tak - dodac ballsy do coughtBalls, wywolac ball->moveInBasket w moveTop, moveRight itp.
+    void moveTop();
+    void moveRight();
+    void moveBottom();
+    void moveLeft();
+
+    vector<Point *> getLeftEdge();
+    vector<Point *> getRightEdge();
+    vector<Point *> getBottomEdge();
+    vector<Point *> getPrevLeftEdge();
+    vector<Point *> getPrevRightEdge();
+    vector<Point *> getPrevBottomEdge();
 };
 
 #endif

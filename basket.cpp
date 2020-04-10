@@ -178,10 +178,5 @@ vector<Point *> Basket::deepCopyEdge(vector<Point *> edge)
         edgeCopy.push_back(point);
     }
 
-    // for (Point *point : edgeCopy)
-    // {
-    //     point->x++;
-    // }
-
     return edgeCopy;
 }

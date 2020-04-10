@@ -9,22 +9,23 @@
 
 using namespace std;
 
-class Window {
-  WINDOW* window;
+class Window
+{
+  WINDOW *window;
   int width;
   int height;
 
   void drawArea();
-  void drawBall(Ball* ball);
-  void drawBasket(Basket* basket);
-  
-  public:
-    Window();
-    ~Window();
-    void reload(vector<Ball*> balls, Basket* basket);
-    int getWidth();
-    int getHeight();
-    WINDOW* getWindow();
+  void drawBall(Ball *ball);
+  void drawBasket(Basket *basket);
+
+public:
+  Window();
+  ~Window();
+  void reload(vector<Ball *> balls, Basket *basket);
+  int getWidth();
+  int getHeight();
+  WINDOW *getWindow();
 };
 
 #endif

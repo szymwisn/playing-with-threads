@@ -15,15 +15,17 @@ using namespace std;
 
 const int BALLS_NUMBER = 3;
 
-Window * window;
-Basket* basket;
+Window *window;
+Basket *basket;
 
-vector<Ball*> allBalls;
+vector<Ball *> allBalls;
 bool running = true;
 int pressedKey;
 
-void* windowUpdateCallback(void* arg) {
-  while(running) {
+void *windowUpdateCallback(void *arg)
+{
+  while (running)
+  {
     usleep(10000);
     window->reload(allBalls, basket);
   }
@@ -31,75 +33,86 @@ void* windowUpdateCallback(void* arg) {
   pthread_exit(NULL);
 }
 
-void* ballCallback(void* id) {
-  while(running) {
-    usleep(allBalls[(long) id]->getSpeed());
-    allBalls[(long) id]->moveBall();
+void *ballCallback(void *id)
+{
+  while (running)
+  {
+    usleep(allBalls[(long)id]->getSpeed());
+    allBalls[(long)id]->moveBall();
   }
 
   pthread_exit(NULL);
 }
 
-void* keyboardCallback(void* arg) {
-  while(running) {
+void *keyboardCallback(void *arg)
+{
+  while (running)
+  {
     int key = getch();
 
-    switch (key) {
-      case 'q':
-        running = false;
-        break;
-      case KEY_UP:
-        basket->moveTop(); 
-        break;
-      case KEY_RIGHT:
-        basket->moveRight(); 
-        break;
-      case KEY_DOWN:
-        basket->moveBottom(); 
-        break;
-      case KEY_LEFT:
-        basket->moveLeft(); 
-        break;
+    switch (key)
+    {
+    case 'q':
+      running = false;
+      break;
+    case KEY_UP:
+      basket->moveTop();
+      break;
+    case KEY_RIGHT:
+      basket->moveRight();
+      break;
+    case KEY_DOWN:
+      basket->moveBottom();
+      break;
+    case KEY_LEFT:
+      basket->moveLeft();
+      break;
     }
   }
 
   pthread_exit(NULL);
 }
 
-int main(int argc, char * argv[]) {
+int main(int argc, char *argv[])
+{
   srand(time(NULL));
 
   window = new Window();
   basket = new Basket(window->getWidth(), window->getHeight());
 
-  for(long i = 0; i < BALLS_NUMBER; i++) {
-    allBalls.push_back(new Ball(i, window->getWidth()/2, window->getHeight() - 2, window->getWidth(), window->getHeight()));
-  } 
-  
+  for (long i = 0; i < BALLS_NUMBER; i++)
+  {
+    allBalls.push_back(new Ball(i, window->getWidth() / 2, window->getHeight() - 2, window->getWidth(), window->getHeight()));
+  }
+
   pthread_t ballThreads[BALLS_NUMBER];
-  pthread_t windowThread;   
+  pthread_t windowThread;
   pthread_t keyboardThread;
 
   pthread_create(&windowThread, NULL, &windowUpdateCallback, NULL);
-  pthread_create(&keyboardThread, NULL, &keyboardCallback, NULL); 
+  pthread_create(&keyboardThread, NULL, &keyboardCallback, NULL);
 
-  for(long i = 0; i < BALLS_NUMBER; i++) {
-    int t = pthread_create(&ballThreads[i], NULL, ballCallback, (void *) i );    
+  for (long i = 0; i < BALLS_NUMBER; i++)
+  {
+    int t = pthread_create(&ballThreads[i], NULL, ballCallback, (void *)i);
 
-    if(t != 0) {
+    if (t != 0)
+    {
       exit(-1);
     }
 
     sleep(1);
-  } 
+  }
 
   pthread_join(windowThread, NULL);
   pthread_join(keyboardThread, NULL);
-    
-  for (int i = 0; i < allBalls.size(); i++) {
+
+  for (int i = 0; i < allBalls.size(); i++)
+  {
     int t = pthread_join(ballThreads[i], NULL);
 
-    if (t) {
+    if (t)
+    {
       exit(-1);
     }
   }

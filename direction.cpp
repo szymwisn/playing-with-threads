@@ -1,4 +1,5 @@
-enum Direction {
+enum Direction
+{
   TOP,
   TOP_RIGHT,
   RIGHT,
