@@ -28,7 +28,7 @@ class Ball
   Basket *basket;
   bool inBasket;
 
-  void bounce();
+  void bounceWalls();
   void bounceBasketLeft();
   void bounceBasketBottom();
   void bounceBasketRight();

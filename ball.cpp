@@ -93,7 +93,7 @@ void Ball::moveBall()
       break;
     }
 
-    this->bounce();
+    this->bounceWalls();
   }
 }
 
@@ -133,7 +133,7 @@ void Ball::moveLeft()
   }
 }
 
-void Ball::bounce()
+void Ball::bounceWalls()
 {
   // top wall
   if (this->pos_y == 1)
@@ -335,7 +335,7 @@ void Ball::tryCatching()
         basket->catchBall(this);
       }
     }
-    // bounce from bottom edge
+    // bounceWalls from bottom edge
     if (this->direction == Direction::TOP_LEFT || this->direction == Direction::TOP || this->direction == Direction::TOP_RIGHT)
     {
       int edge_x_left = basketLeft[0]->x;
@@ -359,7 +359,7 @@ void Ball::tryCatching()
         this->basket->catchBall(this);
       }
     }
-    // bounce from left edge
+    // bounceWalls from left edge
     if (this->direction == Direction::TOP_RIGHT || this->direction == Direction::RIGHT || this->direction == Direction::BOTTOM_RIGHT)
     {
       int edge_y_top = basketLeft[0]->y;
@@ -383,7 +383,7 @@ void Ball::tryCatching()
         this->basket->catchBall(this);
       }
     }
-    // bounce from right edge
+    // bounceWalls from right edge
     if (this->direction == Direction::TOP_LEFT || this->direction == Direction::LEFT || this->direction == Direction::BOTTOM_LEFT)
     {
       int edge_y_top = basketRight[0]->y;

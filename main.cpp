@@ -52,6 +52,8 @@ void *keyboardCallback(void *arg)
   {
     int key = getch();
 
+    usleep(45000);  
+    
     switch (key)
     {
     case 'q':
