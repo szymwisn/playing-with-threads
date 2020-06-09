@@ -31,6 +31,7 @@ class Ball
   void bounceWalls();
   void bounceBasketLeft();
   void bounceBasketBottom();
+  void bounceBasketTop();
   void bounceBasketRight();
   void randomizeDirection();
   int randomizeSpeed();
