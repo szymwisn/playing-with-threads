@@ -22,6 +22,10 @@ vector<Ball *> allBalls;
 bool running = true;
 int pressedKey;
 
+pthread_mutex_t mutex; 
+pthread_cond_t cond;
+
+
 void *windowUpdateCallback(void *arg)
 {
   while (running)
@@ -39,8 +43,22 @@ void *ballCallback(void *id)
   while (running)
   {
     usleep(allBalls[(long)id]->getSpeed());
+
+    pthread_mutex_lock(&mutex);
+
+    if (allBalls[(long)id]->getInBasket() == true) {
+      pthread_cond_wait(&cond, &mutex);
+      pthread_mutex_unlock(&mutex);
+      continue;
+    }
+    
+    pthread_mutex_unlock(&mutex);
+    pthread_cond_signal(&cond);
+
     allBalls[(long)id]->tryCatching();
     allBalls[(long)id]->moveBall();
+
+    pthread_yield(); 
   }
 
   pthread_exit(NULL);
@@ -81,6 +99,9 @@ int main(int argc, char *argv[])
 {
   srand(time(NULL));
 
+  pthread_mutex_init(&mutex, NULL);
+  pthread_cond_init(&cond, NULL);
+
   window = new Window();
   basket = new Basket(window->getWidth(), window->getHeight());
 
@@ -120,6 +141,9 @@ int main(int argc, char *argv[])
       exit(-1);
     }
   }
+
+  pthread_cond_destroy(&cond);
+  pthread_mutex_destroy(&mutex); 
 
   return 0;
 }

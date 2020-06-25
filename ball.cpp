@@ -49,6 +49,11 @@ int Ball::getSpeed()
   return this->speed;
 }
 
+bool Ball::getInBasket()
+{
+  return this->inBasket;
+}
+
 void Ball::moveBall()
 {
   if (!this->inBasket)
